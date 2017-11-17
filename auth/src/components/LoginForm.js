@@ -7,30 +7,29 @@ export default class LoginForm extends Component {
 
     state = {
         email: '',
-        password: '',
+        password1: '',
+        password2: '',
         error: '',
-        loading: false
+        loading: false,
+        registerMode: false
     };
 
-    onButtonPress()
+    onLoginButtonPress()
     {
-        const { email, password } = this.state;
+        const { email, password1 } = this.state;
 
         this.setState({ error: '', loading: true });
 
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        firebase.auth().signInWithEmailAndPassword(email, password1)
             .then(this.onLoginSuccess.bind(this))
-            .catch(() => {
-                firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then(this.onLoginSuccess.bind(this))
-                    .catch(this.onLoginFail.bind(this));
-            });
+            .catch(this.onLoginFail.bind(this));
     }
 
     onLoginSuccess() {
         this.setState({
             email: '',
-            password: '',
+            password1: '',
+            password2: '',
             error: '',
             loading: false
         });
@@ -43,6 +42,32 @@ export default class LoginForm extends Component {
         });
     }
 
+    onRegisterFail() {
+        this.setState({
+            error: 'Registration Failed',
+            loading: false
+        });
+    }
+
+    onRegisterButtonPress() {
+        const { email, password1, password2 } = this.state;
+
+        if (password1 !== password2) {
+            this.setState({ error: 'Passwords do not Match', loading: false });
+            return;
+        }
+
+        this.setState({ error: '', loading: true });
+
+        firebase.auth().createUserWithEmailAndPassword(email, password1)
+            .then(this.onLoginSuccess.bind(this))
+            .catch(this.onRegisterFail.bind(this));
+    }
+
+    switchMode() {
+        this.setState({ registerMode: !this.state.registerMode });
+    }
+
     renderButtons() {
         if (this.state.loading) {
             return (
@@ -52,21 +77,56 @@ export default class LoginForm extends Component {
             );
         }
 
+        if (this.state.registerMode) {
+            return (
+                <View>
+                    <CardSection>
+                        <Button onPress={this.onRegisterButtonPress.bind(this)}>
+                            Register
+                        </Button>
+                    </CardSection>
+
+                    <CardSection>
+                            <Button onPress={this.switchMode.bind(this)}>
+                                Login
+                            </Button>
+                    </CardSection>
+                </View>
+            );
+        }
+
         return (
             <View>
                 <CardSection>
-                    <Button onPress={this.onButtonPress.bind(this)}>
+                    <Button onPress={this.onLoginButtonPress.bind(this)}>
                         Login
                     </Button>
                 </CardSection>
-
                 <CardSection>
-                    <Button onPress={this.props.modeSwitcher}>
+                    <Button onPress={this.switchMode.bind(this)}>
                         Register
                     </Button>
                 </CardSection>
             </View>
         );
+    }
+
+    renderConfirmBox() {
+        if (this.state.registerMode) {
+            return (
+                <CardSection>
+
+                    <Input
+                        label={'Confirm'}
+                        placeholder={'password'}
+                        value={this.state.password2}
+                        secureTextEntry={true}
+                        onChangeText={password2 => this.setState({ password2 })}
+                    />
+
+                </CardSection>
+            );
+        }
     }
 
     render() {
@@ -89,12 +149,14 @@ export default class LoginForm extends Component {
                     <Input
                         label={'Password'}
                         placeholder={'password'}
-                        value={this.state.password}
+                        value={this.state.password1}
                         secureTextEntry={true}
-                        onChangeText={password => this.setState({ password })}
+                        onChangeText={password1 => this.setState({ password1 })}
                     />
 
                 </CardSection>
+
+                {this.renderConfirmBox()}
 
                 <Text style={styles.errorTextStyle}>
                     {this.state.error}

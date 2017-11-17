@@ -3,14 +3,10 @@ import { View } from 'react-native';
 import firebase from 'firebase';
 import { Header, Button, Spinner } from './components/common';
 import LoginForm from './components/LoginForm';
-import RegisterForm from "./components/RegisterForm";
 
 export default class App extends Component {
 
-    state = {
-        loggedIn: null,
-        loginMode: true
-    };
+    state = { loggedIn: null };
 
     // lifecycle method
     componentWillMount() {
@@ -18,13 +14,13 @@ export default class App extends Component {
         console.ignoredYellowBox = ['Remote debugger'];
 
         firebase.initializeApp({
-                apiKey: 'AIzaSyCpaepi-xsHtJ0mhT26UILidyV04vFp7dk',
-                authDomain: 'auth-78c8a.firebaseapp.com',
-                databaseURL: 'https://auth-78c8a.firebaseio.com',
-                projectId: 'auth-78c8a',
-                storageBucket: 'auth-78c8a.appspot.com',
-                messagingSenderId: '519084563262'
-            });
+            apiKey: 'AIzaSyCpaepi-xsHtJ0mhT26UILidyV04vFp7dk',
+            authDomain: 'auth-78c8a.firebaseapp.com',
+            databaseURL: 'https://auth-78c8a.firebaseio.com',
+            projectId: 'auth-78c8a',
+            storageBucket: 'auth-78c8a.appspot.com',
+            messagingSenderId: '519084563262'
+        });
 
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
@@ -33,15 +29,6 @@ export default class App extends Component {
                 this.setState({ loggedIn: false });
             }
         });
-    }
-
-    renderForm() {
-
-        if (this.state.loginMode) {
-            return <LoginForm modeSwitcher={this.switchMode.bind(this)}/>;
-        }
-
-        return <RegisterForm modeSwitcher={this.switchMode.bind(this)}/>;
     }
 
     renderContent() {
@@ -58,7 +45,7 @@ export default class App extends Component {
                     </View>
                 );
             case false:
-                return this.renderForm();
+                return <LoginForm />;
             default:
                 return(
                     <View style={spinnerContainerStyle}>
@@ -66,10 +53,6 @@ export default class App extends Component {
                     </View>
                 );
         }
-    }
-
-    switchMode() {
-        this.setState({ loginMode: !this.state.loginMode });
     }
 
     render() {
