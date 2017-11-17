@@ -3,13 +3,20 @@ import { View } from 'react-native';
 import firebase from 'firebase';
 import { Header, Button, Spinner } from './components/common';
 import LoginForm from './components/LoginForm';
+import RegisterForm from "./components/RegisterForm";
 
 export default class App extends Component {
 
-    state = { loggedIn: null };
+    state = {
+        loggedIn: null,
+        loginMode: true
+    };
 
     // lifecycle method
     componentWillMount() {
+
+        console.ignoredYellowBox = ['Remote debugger'];
+
         firebase.initializeApp({
                 apiKey: 'AIzaSyCpaepi-xsHtJ0mhT26UILidyV04vFp7dk',
                 authDomain: 'auth-78c8a.firebaseapp.com',
@@ -28,6 +35,15 @@ export default class App extends Component {
         });
     }
 
+    renderForm() {
+
+        if (this.state.loginMode) {
+            return <LoginForm modeSwitcher={this.switchMode.bind(this)}/>;
+        }
+
+        return <RegisterForm modeSwitcher={this.switchMode.bind(this)}/>;
+    }
+
     renderContent() {
 
         const { logOutContainerStyle, spinnerContainerStyle } = styles;
@@ -42,7 +58,7 @@ export default class App extends Component {
                     </View>
                 );
             case false:
-                return <LoginForm />;
+                return this.renderForm();
             default:
                 return(
                     <View style={spinnerContainerStyle}>
@@ -50,6 +66,10 @@ export default class App extends Component {
                     </View>
                 );
         }
+    }
+
+    switchMode() {
+        this.setState({ loginMode: !this.state.loginMode });
     }
 
     render() {

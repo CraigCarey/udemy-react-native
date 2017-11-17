@@ -3,42 +3,45 @@ import { Text, View } from 'react-native';
 import { Button, Card, CardSection, Input, Spinner } from "./common";
 import firebase from 'firebase';
 
-export default class LoginForm extends Component {
+export default class RegisterForm extends Component {
 
     state = {
         email: '',
-        password: '',
+        password1: '',
+        password2: '',
         error: '',
         loading: false
     };
 
     onButtonPress()
     {
-        const { email, password } = this.state;
+        const { email, password1, password2 } = this.state;
+
+        if (password1 !== password2) {
+            this.setState({ error: 'Passwords do not Match', loading: false });
+            return;
+        }
 
         this.setState({ error: '', loading: true });
 
-        firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(this.onLoginSuccess.bind(this))
-            .catch(() => {
-                firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then(this.onLoginSuccess.bind(this))
-                    .catch(this.onLoginFail.bind(this));
-            });
+        firebase.auth().createUserWithEmailAndPassword(email, password1)
+                    .then(this.onRegisterSuccess.bind(this))
+                    .catch(this.onRegisterFail.bind(this));
     }
 
-    onLoginSuccess() {
+    onRegisterSuccess() {
         this.setState({
             email: '',
-            password: '',
+            password1: '',
+            password2: '',
             error: '',
             loading: false
         });
     }
 
-    onLoginFail() {
+    onRegisterFail() {
         this.setState({
-            error: 'Authentication Failed',
+            error: 'Registration Failed',
             loading: false
         });
     }
@@ -56,13 +59,13 @@ export default class LoginForm extends Component {
             <View>
                 <CardSection>
                     <Button onPress={this.onButtonPress.bind(this)}>
-                        Login
+                        Register
                     </Button>
                 </CardSection>
 
                 <CardSection>
                     <Button onPress={this.props.modeSwitcher}>
-                        Register
+                        Login
                     </Button>
                 </CardSection>
             </View>
@@ -89,9 +92,21 @@ export default class LoginForm extends Component {
                     <Input
                         label={'Password'}
                         placeholder={'password'}
-                        value={this.state.password}
+                        value={this.state.password1}
                         secureTextEntry={true}
-                        onChangeText={password => this.setState({ password })}
+                        onChangeText={password1 => this.setState({ password1 })}
+                    />
+
+                </CardSection>
+
+                <CardSection>
+
+                    <Input
+                        label={'Confirm'}
+                        placeholder={'password'}
+                        value={this.state.password2}
+                        secureTextEntry={true}
+                        onChangeText={password2 => this.setState({ password2 })}
                     />
 
                 </CardSection>
