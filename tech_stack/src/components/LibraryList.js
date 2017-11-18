@@ -22,8 +22,7 @@ class LibraryList extends Component {
         return (
             <ListView
                 dataSource={this.dataSource}
-                renderRow={this.renderRow}
-            />
+                renderRow={this.renderRow} />
         );
     }
 }
@@ -31,8 +30,6 @@ class LibraryList extends Component {
 // takes our global state object and maps it to our
 // component props
 const mapStateToProps = state => {
-    console.log(state);
-
     return { libraries: state.libraries };
 };
 
