@@ -25,7 +25,6 @@ export const employeeCreate = ({ name, phone, shift }) => {
             .then(() => {
                 dispatch({ type: EMPLOYEE_CREATE });
                 Actions.pop();
-                // Actions.employeeList({ type: 'reset' })
             });
     }
 };
