@@ -3,7 +3,9 @@ import { Actions } from 'react-native-router-flux';
 import {
     EMPLOYEE_UPDATE,
     EMPLOYEE_CREATE,
-    EMPLOYEES_FETCH_SUCCESS
+    EMPLOYEES_FETCH_SUCCESS,
+    EMPLOYEE_SAVE_SUCCESS,
+    EMPLOYEE_CLEAR
 } from './types';
 
 export const employeeUpdate = ({ prop, value }) => {
@@ -39,4 +41,36 @@ export const employeesFetch = () => {
                 dispatch({ type: EMPLOYEES_FETCH_SUCCESS, payload: snapshot.val() })
             });
     }
+};
+
+export const employeeSave = ({ name, phone, shift, uid }) => {
+    const { currentUser } = firebase.auth();
+
+    return (dispatch) => {
+        firebase.database().ref(`/users/${currentUser.uid}/employees/${uid}`)
+            .set({ name, phone, shift })
+            .then(() => {
+                dispatch({ type: EMPLOYEE_SAVE_SUCCESS });
+                Actions.pop();
+            });
+
+    }
+};
+
+export const employeeClear = () => {
+    return ({ type: EMPLOYEE_CLEAR });
+};
+
+export const employeeDelete = ({ uid }) => {
+    const { currentUser } = firebase.auth();
+
+    return (dispatch) => {
+        firebase.database().ref(`/users/${currentUser.uid}/employees/${uid}`)
+            .remove()
+            .then(() => {
+                dispatch({ type: EMPLOYEE_CLEAR });
+                Actions.pop();
+            });
+    }
+
 };
