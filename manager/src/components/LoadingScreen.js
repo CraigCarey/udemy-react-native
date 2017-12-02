@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { View, Text } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'firebase';
 
@@ -16,8 +17,26 @@ class LoadingScreen extends Component {
     }
 
     render() {
-        return (null);
+        return (
+            <View style={styles.splashContainerStyle}>
+                <Text style={styles.splashTextStyle}>
+                    Manager
+                </Text>
+            </View>
+        );
     };
 }
+
+const styles = {
+    splashContainerStyle: {
+        flex: 1,
+        backgroundColor: '#42f492',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    splashTextStyle: {
+        fontSize: 50
+    }
+};
 
 export default LoadingScreen;
