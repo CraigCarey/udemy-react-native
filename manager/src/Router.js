@@ -6,6 +6,7 @@ import EmployeeList from './components/EmployeeList';
 import EmployeeCreate from './components/EmployeeCreate';
 import EmployeeEdit from './components/EmployeeEdit';
 import LoadingScreen from "./components/LoadingScreen";
+import RegisterForm from "./components/RegisterForm";
 
 const RouterComponent = () => {
     return (
@@ -15,6 +16,7 @@ const RouterComponent = () => {
                 <Scene key='auth'>
                     <Scene key='loading' component={LoadingScreen} title='Loading' hideNavBar='true' initial />
                     <Scene key='login' component={LoginForm} title='Login' />
+                    <Scene key='register' component={RegisterForm} title='Register' />
                 </Scene>
 
                 <Scene key='main'>

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { emailChanged, passwordChanged, loginUser } from '../actions';
+import { emailChanged, passwordChanged, password2Changed, registerUser } from '../actions';
 import { Card, CardSection, Input, Button, BorderlessButton, Spinner } from './common';
 
-class LoginForm extends Component {
+class RegisterForm extends Component {
 
     onEmailChange(text) {
         this.props.emailChanged(text);
@@ -15,10 +15,18 @@ class LoginForm extends Component {
         this.props.passwordChanged(text);
     }
 
-    onLoginButtonPress() {
-        const { email, password } = this.props;
+    onPassword2Change(text) {
+        this.props.password2Changed(text);
+    }
 
-        this.props.loginUser({email, password});
+    onLoginButtonPress() {
+        Actions.login({ type: 'replace' });
+    }
+
+    onRegisterButtonPress() {
+        const { email, password, password2 } = this.props;
+
+        this.props.registerUser({email, password, password2 });
     }
 
     renderButton() {
@@ -27,7 +35,7 @@ class LoginForm extends Component {
         }
 
         return (
-            <Button onPress={this.onLoginButtonPress.bind(this)}>Login</Button>
+            <Button onPress={this.onRegisterButtonPress.bind(this)}>Register</Button>
         );
     }
 
@@ -41,10 +49,6 @@ class LoginForm extends Component {
                 </View>
             );
         }
-    }
-
-    onRegisterButtonPress() {
-        Actions.register({ type: 'replace' })
     }
 
     render() {
@@ -67,6 +71,15 @@ class LoginForm extends Component {
                         value={this.props.password} />
                 </CardSection>
 
+                <CardSection>
+                    <Input
+                        secureTextEntry
+                        label='Confirm'
+                        placeholder='confirm password'
+                        onChangeText={this.onPassword2Change.bind(this)}
+                        value={this.props.password2} />
+                </CardSection>
+
                 {this.renderError()}
 
                 <CardSection>
@@ -74,7 +87,7 @@ class LoginForm extends Component {
                 </CardSection>
 
                 <CardSection>
-                    <BorderlessButton onPress={this.onRegisterButtonPress.bind(this)}>Register</BorderlessButton>
+                    <BorderlessButton onPress={this.onLoginButtonPress.bind(this)}>Login</BorderlessButton>
                 </CardSection>
 
             </Card>
@@ -92,11 +105,11 @@ const styles={
 
 const mapStateToProps = state => {
 
-    const { email, password, error, loading } = state.auth;
+    const { email, password, password2, error, loading } = state.auth;
 
-    return { email, password, error, loading };
+    return { email, password, password2, error, loading };
 };
 
 export default connect(mapStateToProps, {
-    emailChanged, passwordChanged, loginUser
-})(LoginForm);
+    emailChanged, passwordChanged, password2Changed, registerUser
+})(RegisterForm);
