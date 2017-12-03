@@ -8,7 +8,8 @@ import {
     REGISTER_USER_START,
     REGISTER_USER_SUCCESS,
     REGISTER_USER_FAIL,
-    PASSWORD_MISMATCH
+    PASSWORD_MISMATCH,
+    CLEAR_AUTH_ERRORS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -44,6 +45,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, error: 'Registration Failed.', loading: false };
         case PASSWORD_MISMATCH:
             return { ...state, error: 'Passwords do not match', loading: false };
+        case CLEAR_AUTH_ERRORS:
+            return { ...state, error: '' };
         default:
             return state;
     }

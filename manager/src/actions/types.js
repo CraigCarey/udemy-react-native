@@ -8,6 +8,7 @@ export const REGISTER_USER_START = 'register_user_start';
 export const REGISTER_USER_SUCCESS = 'register_user_success';
 export const REGISTER_USER_FAIL = 'register_user_fail';
 export const PASSWORD_MISMATCH = 'password_mismatch';
+export const CLEAR_AUTH_ERRORS = 'clear_auth_errors';
 
 export const EMPLOYEE_UPDATE = 'employee_update';
 export const EMPLOYEE_CREATE = 'employee_create';

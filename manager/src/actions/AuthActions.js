@@ -9,7 +9,8 @@ import {
     LOGIN_USER_FAIL,
     REGISTER_USER_SUCCESS,
     REGISTER_USER_FAIL,
-    PASSWORD_MISMATCH
+    PASSWORD_MISMATCH,
+    CLEAR_AUTH_ERRORS
 } from './types';
 
 export const emailChanged = (text) => {
@@ -68,6 +69,12 @@ export const registerUser = ({ email, password, password2 }) => {
                 });
         }
     }
+};
+
+export const clearAuthErrors = () => {
+    return {
+        type: CLEAR_AUTH_ERRORS
+    };
 };
 
 const loginUserFail = (dispatch) => {

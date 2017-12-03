@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { emailChanged, passwordChanged, password2Changed, registerUser } from '../actions';
-import { Card, CardSection, Input, Button, BorderlessButton, Spinner } from './common';
+import { emailChanged, passwordChanged, password2Changed, registerUser, clearAuthErrors } from '../actions';
+import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class RegisterForm extends Component {
+
+    componentWillMount() {
+        this.props.clearAuthErrors();
+    }
 
     onEmailChange(text) {
         this.props.emailChanged(text);
@@ -87,7 +91,13 @@ class RegisterForm extends Component {
                 </CardSection>
 
                 <CardSection>
-                    <BorderlessButton onPress={this.onLoginButtonPress.bind(this)}>Login</BorderlessButton>
+                    <Button
+                        onPress={this.onLoginButtonPress.bind(this)}
+                        buttonStyleOverrides={styles.loginButtonStyle}
+                        textStyleOverrides={styles.loginButtonTextStyle}
+                    >
+                        Login
+                    </Button>
                 </CardSection>
 
             </Card>
@@ -100,6 +110,12 @@ const styles={
         fontSize: 20,
         alignSelf: 'center',
         color: 'red'
+    },
+    loginButtonStyle: {
+        borderWidth: 0
+    },
+    loginButtonTextStyle: {
+        color: 'green'
     }
 };
 
@@ -111,5 +127,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-    emailChanged, passwordChanged, password2Changed, registerUser
+    emailChanged, passwordChanged, password2Changed, registerUser, clearAuthErrors
 })(RegisterForm);

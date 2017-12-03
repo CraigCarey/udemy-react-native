@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { emailChanged, passwordChanged, loginUser } from '../actions';
-import { Card, CardSection, Input, Button, BorderlessButton, Spinner } from './common';
+import { emailChanged, passwordChanged, loginUser, clearAuthErrors } from '../actions';
+import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
+
+    componentWillMount() {
+        this.props.clearAuthErrors();
+    }
 
     onEmailChange(text) {
         this.props.emailChanged(text);
@@ -74,7 +78,13 @@ class LoginForm extends Component {
                 </CardSection>
 
                 <CardSection>
-                    <BorderlessButton onPress={this.onRegisterButtonPress.bind(this)}>Register</BorderlessButton>
+                    <Button
+                        onPress={this.onRegisterButtonPress.bind(this)}
+                        buttonStyleOverrides={styles.registerButtonStyle}
+                        textStyleOverrides={styles.registerButtonTextStyle}
+                    >
+                        Register
+                    </Button>
                 </CardSection>
 
             </Card>
@@ -87,6 +97,12 @@ const styles={
         fontSize: 20,
         alignSelf: 'center',
         color: 'red'
+    },
+    registerButtonStyle: {
+        borderWidth: 0
+    },
+    registerButtonTextStyle: {
+        color: 'green'
     }
 };
 
@@ -98,5 +114,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-    emailChanged, passwordChanged, loginUser
+    emailChanged, passwordChanged, loginUser, clearAuthErrors
 })(LoginForm);
